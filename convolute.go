@@ -3,6 +3,7 @@ package main
 import (
 	"image"
 	"image/color"
+	"math"
 )
 
 type OOBImage struct {
@@ -45,5 +46,10 @@ func convolute(img image.Image, matrix [][]float64, p image.Point) uint16 {
 			s += float64(r+g+b) / 3 * matrix[y][x]
 		}
 	}
-	return uint16(s / float64(len(matrix)*len(matrix[0])))
+	if s < 0 {
+		return 0
+	} else if s > math.MaxUint16 {
+		return math.MaxUint16
+	}
+	return uint16(s)
 }

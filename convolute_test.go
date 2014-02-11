@@ -31,9 +31,9 @@ func TestInternalConvolute(t *testing.T) {
 		img.Set(i%4, i/4, color.Gray16{uint16(i * 1000)})
 	}
 	matrix := [][]float64{
-		{1, 0, 1},
+		{1.0 / 4, 0, 1.0 / 4},
 		{0, 0, 0},
-		{1, 0, 1},
+		{1.0 / 4, 0, 1.0 / 4},
 	}
 
 	oob := &OOBImage{
@@ -41,11 +41,11 @@ func TestInternalConvolute(t *testing.T) {
 		OOBColor: color.Black,
 	}
 
-	if v := convolute(oob, matrix, image.Point{0, 0}); v != 5000/9 {
+	if v := convolute(oob, matrix, image.Point{0, 0}); v != 5000/4 {
 		t.Fatalf("Unexpected convolution result at (0, 0): %d", v)
 	}
 
-	if v := convolute(oob, matrix, image.Point{1, 1}); v != (0+2000+8000+10000)/9 {
+	if v := convolute(oob, matrix, image.Point{1, 1}); v != 0+2000/4+8000/4+10000/4 {
 		t.Fatalf("Unexpected convolution result at (1, 1): %d", v)
 	}
 }
@@ -56,18 +56,18 @@ func TestConvolute(t *testing.T) {
 		img.Set(i%4, i/4, color.Gray16{uint16(i * 1000)})
 	}
 	matrix := [][]float64{
-		{1, 0, 1},
+		{1.0 / 4, 0, 1.0 / 4},
 		{0, 0, 0},
-		{1, 0, 1},
+		{1.0 / 4, 0, 1.0 / 4},
 	}
 
 	cImg := Convolute(img, matrix)
-	if r, _, _, _ := cImg.At(0, 0).RGBA(); r != 5000/9 {
+	if r, _, _, _ := cImg.At(0, 0).RGBA(); r != 5000/4 {
 
 		t.Fatalf("Unexpected convolution result at (0, 0): %d", r)
 	}
 
-	if r, _, _, _ := cImg.At(1, 1).RGBA(); r != (0+2000+8000+10000)/9 {
+	if r, _, _, _ := cImg.At(1, 1).RGBA(); r != 0+2000/4+8000/4+10000/4 {
 		t.Fatalf("Unexpected convolution result at (1, 1): %d", r)
 	}
 }
